@@ -8,7 +8,7 @@ SOURCE_DIR = input ("Choose the Source directory")
 BACKUP_DIR = input ("Choose the Backup directory")
 SOFT_DELETE_DIR = input ("Choose the Soft Delete directory")
 
-# Define the period of time between sync operations (in seconds)
+# Let the user choose the period of time between sync (in seconds)
 period = int(input("Enter the sync period (in seconds): "))
 
 # Set up logging
@@ -30,7 +30,7 @@ while True:
     # Log that sync has been triggered
     logging.info('Sync triggered')
 
-    # Sync files from Source to Backup
+    # Sync Source and Backup
     for root, dirs, files in os.walk(SOURCE_DIR):
         # Create corresponding directory in backup if it doesn't exist
         backup_dir = os.path.join(BACKUP_DIR, os.path.relpath(root, SOURCE_DIR))
@@ -52,14 +52,14 @@ while True:
                 logging.info(f'Copying {file}')
                 shutil.copy2(source_path, backup_path)
 
-    # Delete files and directories from Backup that no longer exist in Source
+    # Delete files from Backup that no longer exist in Source
     for root, dirs, files in os.walk(BACKUP_DIR):
         for file in files:
             backup_path = os.path.join(root, file)
             source_path = os.path.join(SOURCE_DIR, os.path.relpath(root, BACKUP_DIR), file)
 
             if not os.path.exists(source_path):
-                # Create corresponding directory in soft delete if it doesn't exist
+                # Create folder in soft delete if it doesn't exist
                 soft_delete_dir = os.path.join(SOFT_DELETE_DIR, os.path.relpath(root, BACKUP_DIR))
                 if not os.path.exists(soft_delete_dir):
                     os.makedirs(soft_delete_dir)
@@ -72,7 +72,7 @@ while True:
             source_dir = os.path.join(SOURCE_DIR, os.path.relpath(backup_dir, BACKUP_DIR))
 
             if not os.path.exists(source_dir):
-                # Create corresponding directory in soft delete if it doesn't exist
+                # Create folder in soft delete if it doesn't exist
                 soft_delete_dir = os.path.join(SOFT_DELETE_DIR, os.path.relpath(backup_dir, BACKUP_DIR))
                 if not os.path.exists(soft_delete_dir):
                     os.makedirs(soft_delete_dir)
